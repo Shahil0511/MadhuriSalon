@@ -1,0 +1,344 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+
+export default function About() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Detect system dark mode preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    setIsDarkMode(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDarkMode(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  // Intersection Observer for scroll animations and video autoplay
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Auto-play video when section becomes visible
+          if (videoRef.current && isVideoLoaded) {
+            videoRef.current.play().catch((error) => {
+              console.log(
+                "Autoplay blocked by browser, user interaction required"
+              );
+            });
+          }
+        } else {
+          // Pause video when section is not visible
+          if (videoRef.current && !videoRef.current.paused) {
+            videoRef.current.pause();
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [isVideoLoaded]);
+
+  const handleBookService = () => {
+    document
+      .getElementById("booking-section")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleVideoLoadedData = () => {
+    setIsVideoLoaded(true);
+    // Try to autoplay when video data is loaded
+    if (videoRef.current && isVisible) {
+      videoRef.current.play().catch((error) => {
+        console.log("Autoplay blocked by browser");
+      });
+    }
+  };
+
+  // Color scheme matching your Services section
+  const sectionBg = isDarkMode ? "bg-black" : "bg-white";
+  const titleColor = isDarkMode ? "text-white" : "text-black";
+  const textColor = isDarkMode ? "text-gray-300" : "text-gray-700";
+  const cardBg = isDarkMode ? "bg-gray-900" : "bg-gray-50";
+  const borderColor = isDarkMode ? "border-gray-700" : "border-gray-200";
+
+  return (
+    <section
+      ref={sectionRef}
+      className={`py-20 ${sectionBg} transition-colors duration-300 overflow-hidden relative`}
+      id="about"
+    >
+      <div className="container mx-auto px-4">
+        {/* Animated Header */}
+        <div
+          className={`text-center mb-16 transition-all duration-1000 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+        >
+          <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${titleColor}`}>
+            About <span className="text-pink-600">Madhuri Salon</span>
+          </h2>
+          <div className="w-24 h-1 bg-pink-600 mx-auto mb-6"></div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Left Side - Welcome Message with Animation */}
+          <div
+            className={`space-y-6 transition-all duration-1000 delay-300 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-10"
+            }`}
+          >
+            <div
+              className={`p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
+            >
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center mr-4">
+                  <span className="text-2xl">💖</span>
+                </div>
+                <h3 className={`text-2xl font-bold ${titleColor}`}>
+                  Welcome to Madhuri Salon
+                </h3>
+              </div>
+
+              <p className={`text-lg mb-4 ${textColor}`}>
+                Where{" "}
+                <span className="text-pink-600 font-semibold">
+                  Beauty Meets Elegance & Convenience!
+                </span>
+              </p>
+
+              <p className={`mb-6 ${textColor}`}>
+                At Madhuri Salon, we believe beauty isn't just about looking
+                good—it's about feeling confident, radiant, and unstoppable! ✨
+                Whether it's a special event, a casual pamper day, or a complete
+                makeover, we are here to bring out your best self.
+              </p>
+
+              <p className={`${textColor}`}>
+                Step into a world where luxury meets comfort, and beauty meets
+                care. Whether at our modern salon or in the comfort of your
+                home, Madhuri Salon is your ultimate beauty destination! 🏡💇‍♀️
+              </p>
+            </div>
+
+            {/* Why Choose Us - Animated Cards */}
+            <div
+              className={`transition-all duration-1000 delay-500 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
+              }`}
+            >
+              <h4
+                className={`text-2xl font-bold mb-6 text-center ${titleColor}`}
+              >
+                🌟 Why Choose Madhuri Salon? 🌟
+              </h4>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  {
+                    icon: "💇‍♀️",
+                    title: "Dual Experience",
+                    desc: "Salon or Home service options",
+                  },
+                  {
+                    icon: "💎",
+                    title: "Expert Team",
+                    desc: "Professional beauticians",
+                  },
+                  {
+                    icon: "🌸",
+                    title: "Premium Products",
+                    desc: "Safe & effective results",
+                  },
+                  {
+                    icon: "🎯",
+                    title: "Personalized Solutions",
+                    desc: "Customized for you",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className={`p-4 rounded-lg ${cardBg} border ${borderColor} transition-transform duration-300 hover:scale-105`}
+                  >
+                    <div className="flex items-center">
+                      <span className="text-2xl mr-3">{item.icon}</span>
+                      <div>
+                        <h5 className={`font-semibold ${titleColor}`}>
+                          {item.title}
+                        </h5>
+                        <p className={`text-sm ${textColor}`}>{item.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side - Video & CTA with Animation */}
+          <div
+            className={`space-y-8 transition-all duration-1000 delay-700 ${
+              isVisible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-10"
+            }`}
+          >
+            {/* Video Section */}
+            <div
+              className={`rounded-2xl overflow-hidden shadow-lg ${borderColor} border`}
+            >
+              <div className="relative">
+                {/* Video Player */}
+                <div className="relative h-64 md:h-80 bg-gradient-to-br from-pink-400 to-purple-600">
+                  <video
+                    ref={videoRef}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="auto"
+                    onLoadedData={handleVideoLoadedData}
+                  >
+                    {/* Use a sample video URL for testing - replace with your actual video */}
+                    <source src="contact.mp4" type="video/mp4" />
+                    {/* Fallback for your local video */}
+                    <source src="/contact.mp4" type="video/mp4" />
+                    <source src="/contact.webm" type="video/webm" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+
+                <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                  🎬 Salon Experience
+                </div>
+              </div>
+
+              <div className={`p-6 ${cardBg}`}>
+                <h3 className={`text-xl font-bold mb-3 ${titleColor}`}>
+                  Experience Madhuri Salon ✨
+                </h3>
+                <p className={`${textColor} mb-4`}>
+                  Watch our premium salon facilities and luxurious environment
+                  in this seamless video tour.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Luxury Interior",
+                    "Professional Equipment",
+                    "Hygienic Environment",
+                    "Comfortable Seating",
+                  ].map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-medium"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Services List */}
+            <div
+              className={`p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
+            >
+              <h4
+                className={`text-2xl font-bold mb-6 text-center ${titleColor}`}
+              >
+                💅 Our Services Include
+              </h4>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {[
+                  "Haircare: Haircuts, styling, coloring, treatments",
+                  "Skincare: Facials, anti-aging therapies, glow treatments",
+                  "Nails: Manicure, pedicure, nail art, hand & foot care",
+                  "Waxing & Threading: Smooth, flawless results",
+                  "Makeup & Bridal Packages: Look stunning for any occasion",
+                  "Home Service Packages: Professional beauty at your convenience",
+                ].map((service, index) => (
+                  <div key={index} className="flex items-start">
+                    <span className="text-pink-600 mr-2 mt-1">•</span>
+                    <span className={`text-sm ${textColor}`}>{service}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Madhuri Magic Section */}
+            <div
+              className={`p-8 rounded-2xl bg-gradient-to-r from-pink-600 to-pink-500 text-white text-center shadow-lg transition-all duration-1000 delay-1000 ${
+                isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              }`}
+            >
+              <h4 className="text-2xl font-bold mb-4">
+                🌈 Experience the Madhuri Magic! 🌈
+              </h4>
+
+              <p className="mb-6 opacity-95">
+                Whether you visit us or book a home service, we promise a
+                luxurious, relaxing, and unforgettable beauty experience. At
+                Madhuri Salon, beauty is not just a service—it's a feeling, an
+                experience, and a transformation!
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={handleBookService}
+                  className="bg-white text-pink-600 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition-colors duration-300 transform hover:scale-105"
+                >
+                  💖 Book Appointment
+                </button>
+                <button className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105">
+                  📞 Call Now
+                </button>
+              </div>
+
+              <p className="mt-6 text-pink-200 font-semibold">
+                Your comfort, your beauty, our expertise. That's the Madhuri
+                promise!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Floating Decorative Elements */}
+        <div
+          className={`absolute top-20 left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20 blur-xl transition-all duration-2000 ${
+            isVisible ? "opacity-30" : "opacity-0"
+          }`}
+        ></div>
+        <div
+          className={`absolute bottom-20 right-10 w-32 h-32 bg-pink-300 rounded-full opacity-20 blur-xl transition-all duration-2000 delay-500 ${
+            isVisible ? "opacity-30" : "opacity-0"
+          }`}
+        ></div>
+      </div>
+    </section>
+  );
+}
