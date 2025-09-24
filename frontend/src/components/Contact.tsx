@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 interface ContactProps {
-  onBookService?: (serviceName: string) => vo;
+  onBookService?: (serviceName: string) => void;
 }
 
 export default function Contact({ onBookService }: ContactProps) {
@@ -367,7 +367,7 @@ export default function Contact({ onBookService }: ContactProps) {
             >
               <h3 className="text-2xl font-bold mb-4">🚀 Quick Booking</h3>
               <p className="mb-6 opacity-95">
-                Do not wait! Book your appointment now and get 10% off on your
+                Dot wait! Book your appointment now and get 10% off on your
                 first service.
               </p>
 
