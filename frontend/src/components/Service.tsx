@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Services() {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [, setActiveCard] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Detect system dark mode preference
