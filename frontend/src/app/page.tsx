@@ -23,25 +23,27 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Header />
-      <section id="home">
-        <Hero
-          showBookingForm={showBookingForm}
-          selectedService={selectedService}
-          onCloseForm={handleCloseForm}
-          onBookService={handleBookService}
-        />
-      </section>
-      <section id="services">
-        <Service onBookService={handleBookService} />
-      </section>
-      <section id="about">
-        <About onBookService={handleBookService} />
-      </section>
-      <section id="contact">
-        <Contact onBookService={handleBookService} />
-      </section>
+      <main className="overflow-hidden">
+        <section id="home">
+          <Hero
+            showBookingForm={showBookingForm}
+            selectedService={selectedService}
+            onCloseForm={handleCloseForm}
+            onBookService={handleBookService}
+          />
+        </section>
+        <section id="services">
+          <Service onBookService={handleBookService} />
+        </section>
+        <section id="about">
+          <About onBookService={handleBookService} />
+        </section>
+        <section id="contact">
+          <Contact onBookService={handleBookService} />
+        </section>
+      </main>
       <Footer />
     </div>
   );
