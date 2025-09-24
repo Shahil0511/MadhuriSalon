@@ -387,7 +387,7 @@ export default function Contact({ onBookService }: ContactProps) {
                 🚀 Quick Booking
               </h3>
               <p className="mb-4 md:mb-6 opacity-95 text-sm md:text-base">
-                Don't wait! Book your appointment now and get 10% off on your
+                Do not wait! Book your appointment now and get 10% off on your
                 first service.
               </p>
 
