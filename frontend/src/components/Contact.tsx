@@ -35,7 +35,7 @@ export default function Contact({ onBookService }: ContactProps) {
           setIsVisible(true);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 } // Reduced threshold for mobile
     );
 
     if (sectionRef.current) {
@@ -54,7 +54,10 @@ export default function Contact({ onBookService }: ContactProps) {
       if (isVideoPlaying) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play();
+        videoRef.current.play().catch(() => {
+          // Handle autoplay restrictions
+          console.log("Autoplay blocked");
+        });
       }
       setIsVideoPlaying(!isVideoPlaying);
     }
@@ -68,7 +71,6 @@ export default function Contact({ onBookService }: ContactProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
     alert("Thank you for your message! We will get back to you soon.");
   };
 
@@ -84,20 +86,22 @@ export default function Contact({ onBookService }: ContactProps) {
   return (
     <section
       ref={sectionRef}
-      className={`py-20 ${sectionBg} transition-colors duration-300 overflow-hidden`}
+      className={`py-12 md:py-20 ${sectionBg} transition-colors duration-300 overflow-visible min-h-screen`} // Changed to overflow-visible and added min-h-screen
       id="contact"
     >
       <div className="container mx-auto px-4">
         {/* Animated Header */}
         <div
-          className={`text-center mb-16 transition-all duration-1000 ${
+          className={`text-center mb-12 md:mb-16 transition-all duration-1000 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <h2 className={`text-4xl md:text-5xl font-bold mb-4 ${titleColor}`}>
+          <h2 className={`text-3xl md:text-5xl font-bold mb-4 ${titleColor}`}>
             Get In <span className="text-pink-600">Touch</span>
           </h2>
-          <p className={`text-lg max-w-2xl mx-auto ${textColor}`}>
+          <p
+            className={`text-base md:text-lg max-w-2xl mx-auto ${textColor} px-4`}
+          >
             Ready to transform your look? Contact us today and let us create
             something beautiful together!
           </p>
@@ -105,10 +109,10 @@ export default function Contact({ onBookService }: ContactProps) {
           <div className="w-24 h-1 bg-pink-600 mx-auto mb-6"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
           {/* Left Side - Contact Form & Info */}
           <div
-            className={`space-y-8 transition-all duration-1000 delay-300 ${
+            className={`space-y-6 md:space-y-8 transition-all duration-1000 delay-300 ${
               isVisible
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 -translate-x-10"
@@ -116,14 +120,16 @@ export default function Contact({ onBookService }: ContactProps) {
           >
             {/* Contact Form */}
             <div
-              className={`p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
+              className={`p-6 md:p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
             >
-              <h3 className={`text-2xl font-bold mb-6 ${titleColor}`}>
+              <h3
+                className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 ${titleColor}`}
+              >
                 Send us a Message 💌
               </h3>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                   <div>
                     <label
                       className={`block text-sm font-medium mb-2 ${textColor}`}
@@ -133,7 +139,7 @@ export default function Contact({ onBookService }: ContactProps) {
                     <input
                       type="text"
                       required
-                      className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                       placeholder="Your first name"
                     />
                   </div>
@@ -146,7 +152,7 @@ export default function Contact({ onBookService }: ContactProps) {
                     <input
                       type="text"
                       required
-                      className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                      className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                       placeholder="Your last name"
                     />
                   </div>
@@ -161,7 +167,7 @@ export default function Contact({ onBookService }: ContactProps) {
                   <input
                     type="email"
                     required
-                    className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                     placeholder="your@email.com"
                   />
                 </div>
@@ -174,7 +180,7 @@ export default function Contact({ onBookService }: ContactProps) {
                   </label>
                   <input
                     type="tel"
-                    className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                     placeholder="+91 1234567890"
                   />
                 </div>
@@ -186,7 +192,7 @@ export default function Contact({ onBookService }: ContactProps) {
                     Service Interested In
                   </label>
                   <select
-                    className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                   >
                     <option>Select a service</option>
                     <option>Mini Glow Up</option>
@@ -209,15 +215,15 @@ export default function Contact({ onBookService }: ContactProps) {
                     Message
                   </label>
                   <textarea
-                    rows={4}
-                    className={`w-full px-4 py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
+                    rows={3}
+                    className={`w-full px-3 py-2 md:px-4 md:py-3 rounded-lg border ${inputBorder} ${inputBg} transition-colors duration-200 focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base`}
                     placeholder="Tell us about your beauty needs..."
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-pink-600 hover:bg-pink-700 text-white py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                  className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                 >
                   📧 Send Message
                 </button>
@@ -226,13 +232,15 @@ export default function Contact({ onBookService }: ContactProps) {
 
             {/* Contact Information */}
             <div
-              className={`p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
+              className={`p-6 md:p-8 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
             >
-              <h3 className={`text-2xl font-bold mb-6 ${titleColor}`}>
+              <h3
+                className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 ${titleColor}`}
+              >
                 Contact Information 📞
               </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {[
                   {
                     icon: "🏠",
@@ -261,17 +269,25 @@ export default function Contact({ onBookService }: ContactProps) {
                 ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-start space-x-3 md:space-x-4 p-2 md:p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <span className="text-2xl">{item.icon}</span>
-                    <div>
-                      <h4 className={`font-semibold ${titleColor}`}>
+                    <span className="text-xl md:text-2xl flex-shrink-0">
+                      {item.icon}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      {" "}
+                      {/* Added to prevent text overflow */}
+                      <h4
+                        className={`font-semibold text-sm md:text-base ${titleColor} truncate`}
+                      >
                         {item.title}
                       </h4>
-                      <p className={`font-medium ${textColor}`}>
+                      <p
+                        className={`font-medium text-xs md:text-sm ${textColor} break-words`}
+                      >
                         {item.content}
                       </p>
-                      <p className={`text-sm ${textColor} opacity-80`}>
+                      <p className={`text-xs ${textColor} opacity-80`}>
                         {item.sub}
                       </p>
                     </div>
@@ -283,7 +299,7 @@ export default function Contact({ onBookService }: ContactProps) {
 
           {/* Right Side - Video & Map */}
           <div
-            className={`space-y-8 transition-all duration-1000 delay-500 ${
+            className={`space-y-6 md:space-y-8 transition-all duration-1000 delay-500 ${
               isVisible
                 ? "opacity-100 translate-x-0"
                 : "opacity-0 translate-x-10"
@@ -294,56 +310,58 @@ export default function Contact({ onBookService }: ContactProps) {
               className={`rounded-2xl overflow-hidden shadow-lg ${borderColor} border`}
             >
               <div className="relative">
-                <div className="relative h-64 md:h-80 bg-gradient-to-br from-pink-400 to-purple-600 flex items-center justify-center">
+                <div className="relative h-48 md:h-64 lg:h-80 bg-gradient-to-br from-pink-400 to-purple-600 flex items-center justify-center">
                   {isVideoPlaying ? (
                     <video
                       ref={videoRef}
                       className="w-full h-full object-cover"
                       controls
-                      poster="/video-poster.jpg"
+                      playsInline
                     >
                       <source src="/contact.mp4" type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   ) : (
-                    <div className="text-center text-white">
+                    <div className="text-center text-white px-4">
                       <button
                         onClick={handleVideoPlay}
-                        className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
+                        className="w-16 h-16 md:w-20 md:h-20 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
                       >
                         <svg
-                          className="w-12 h-12"
+                          className="w-8 h-8 md:w-12 md:h-12"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       </button>
-                      <p className="mt-4 text-lg font-semibold">
+                      <p className="mt-3 md:mt-4 text-base md:text-lg font-semibold">
                         Watch Our Salon Tour
                       </p>
-                      <p className="text-sm opacity-90">
+                      <p className="text-xs md:text-sm opacity-90">
                         Click to play the video
                       </p>
                     </div>
                   )}
                 </div>
 
-                <div className="absolute bottom-4 left-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+                <div className="absolute bottom-3 left-3 bg-black/50 text-white px-2 py-1 rounded-full text-xs md:text-sm">
                   🎬 Salon Experience
                 </div>
               </div>
 
-              <div className={`p-6 ${cardBg}`}>
-                <h3 className={`text-xl font-bold mb-3 ${titleColor}`}>
+              <div className={`p-4 md:p-6 ${cardBg}`}>
+                <h3
+                  className={`text-lg md:text-xl font-bold mb-2 md:mb-3 ${titleColor}`}
+                >
                   Experience Madhuri Salon ✨
                 </h3>
-                <p className={`${textColor} mb-4`}>
+                <p className={`text-sm md:text-base ${textColor} mb-3 md:mb-4`}>
                   Take a virtual tour of our premium salon facilities and see
                   why clients love our luxurious atmosphere and professional
                   services.
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1 md:gap-2">
                   {[
                     "Luxury Interior",
                     "Professional Equipment",
@@ -352,7 +370,7 @@ export default function Contact({ onBookService }: ContactProps) {
                   ].map((tag, index) => (
                     <span
                       key={index}
-                      className="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-medium"
+                      className="bg-pink-100 text-pink-600 px-2 py-1 rounded-full text-xs font-medium"
                     >
                       {tag}
                     </span>
@@ -363,30 +381,32 @@ export default function Contact({ onBookService }: ContactProps) {
 
             {/* Quick Booking CTA */}
             <div
-              className={`p-8 rounded-2xl bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg`}
+              className={`p-6 md:p-8 rounded-2xl bg-gradient-to-r from-pink-600 to-pink-500 text-white shadow-lg`}
             >
-              <h3 className="text-2xl font-bold mb-4">🚀 Quick Booking</h3>
-              <p className="mb-6 opacity-95">
-                Dot wait! Book your appointment now and get 10% off on your
+              <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">
+                🚀 Quick Booking
+              </h3>
+              <p className="mb-4 md:mb-6 opacity-95 text-sm md:text-base">
+                Don't wait! Book your appointment now and get 10% off on your
                 first service.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <button
                   onClick={() => handleBookService("Quick Booking - Call")}
-                  className="w-full bg-white text-pink-600 hover:bg-gray-100 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                  className="w-full bg-white text-pink-600 hover:bg-gray-100 py-2 md:py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
                 >
                   📞 Call Now to Book
                 </button>
                 <button
                   onClick={() => handleBookService("Quick Booking - WhatsApp")}
-                  className="w-full border-2 border-white text-white hover:bg-white hover:text-pink-600 py-3 rounded-lg font-semibold transition-all duration-300"
+                  className="w-full border-2 border-white text-white hover:bg-white hover:text-pink-600 py-2 md:py-3 rounded-lg font-semibold transition-all duration-300 text-sm md:text-base"
                 >
                   💬 WhatsApp Instant Booking
                 </button>
               </div>
 
-              <div className="mt-6 p-3 bg-white/10 rounded-lg text-center">
+              <div className="mt-4 md:mt-6 p-2 md:p-3 bg-white/10 rounded-lg text-center">
                 <p className="text-sm">⭐️ ⭐️ ⭐️ ⭐️ ⭐️</p>
                 <p className="text-xs mt-1">
                   Rated 4.9/5 by 500+ happy clients
@@ -396,16 +416,18 @@ export default function Contact({ onBookService }: ContactProps) {
 
             {/* Social Media & Follow */}
             <div
-              className={`p-6 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
+              className={`p-4 md:p-6 rounded-2xl ${cardBg} border ${borderColor} shadow-lg`}
             >
-              <h3 className={`text-xl font-bold mb-4 ${titleColor}`}>
+              <h3
+                className={`text-lg md:text-xl font-bold mb-3 md:mb-4 ${titleColor}`}
+              >
                 Follow Our Journey 🌸
               </h3>
-              <p className={`${textColor} mb-4`}>
+              <p className={`text-sm md:text-base ${textColor} mb-3 md:mb-4`}>
                 See our latest work, offers, and beauty tips on social media.
               </p>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2 md:gap-3">
                 {[
                   { icon: "📷", name: "Instagram", handle: "@madhurisalon" },
                   { icon: "👍", name: "Facebook", handle: "Madhuri Salon" },
@@ -414,13 +436,17 @@ export default function Contact({ onBookService }: ContactProps) {
                 ].map((social, index) => (
                   <div
                     key={index}
-                    className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    className="p-2 md:p-3 rounded-lg bg-gray-100 dark:bg-gray-800 text-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <span className="text-2xl block mb-1">{social.icon}</span>
-                    <span className={`text-sm font-medium ${titleColor}`}>
+                    <span className="text-xl md:text-2xl block mb-1">
+                      {social.icon}
+                    </span>
+                    <span
+                      className={`text-xs md:text-sm font-medium ${titleColor} block`}
+                    >
                       {social.name}
                     </span>
-                    <span className={`text-xs block ${textColor}`}>
+                    <span className={`text-xs ${textColor} block truncate`}>
                       {social.handle}
                     </span>
                   </div>
@@ -430,14 +456,14 @@ export default function Contact({ onBookService }: ContactProps) {
           </div>
         </div>
 
-        {/* Floating Decorative Elements */}
+        {/* Floating Decorative Elements - Reduced for mobile */}
         <div
-          className={`absolute top-1/4 left-5 w-16 h-16 bg-pink-200 rounded-full opacity-20 blur-xl transition-all duration-2000 ${
+          className={`absolute top-10 left-2 w-12 h-12 md:top-1/4 md:left-5 md:w-16 md:h-16 bg-pink-200 rounded-full opacity-20 blur-xl transition-all duration-2000 ${
             isVisible ? "opacity-30" : "opacity-0"
           }`}
         ></div>
         <div
-          className={`absolute bottom-1/3 right-5 w-24 h-24 bg-pink-300 rounded-full opacity-20 blur-xl transition-all duration-2000 delay-500 ${
+          className={`absolute bottom-10 right-2 w-16 h-16 md:bottom-1/3 md:right-5 md:w-24 md:h-24 bg-pink-300 rounded-full opacity-20 blur-xl transition-all duration-2000 delay-500 ${
             isVisible ? "opacity-30" : "opacity-0"
           }`}
         ></div>
