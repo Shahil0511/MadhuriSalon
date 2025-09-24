@@ -20,6 +20,45 @@ export default function Footer() {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // Smooth scroll function (same as Header)
+  const scrollToSection = (sectionId: string) => {
+    if (sectionId === "home") {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Handle navigation click (same as Header)
+  const handleNavClick = (sectionId: string) => {
+    scrollToSection(sectionId);
+  };
+
+  // Handle service booking (same as About section)
+  const handleBookService = () => {
+    scrollToSection("contact");
+  };
+
+  // Handle call now (same as About section)
+  const handleCallNow = () => {
+    window.open("tel:+919315673184", "_self");
+  };
+
   const footerBg = isDarkMode ? "bg-gray-900" : "bg-gray-50";
   const borderColor = isDarkMode ? "border-gray-700" : "border-gray-200";
   const textColor = isDarkMode ? "text-gray-300" : "text-gray-700";
@@ -27,12 +66,12 @@ export default function Footer() {
   const hoverColor = "hover:text-pink-600";
 
   const quickLinks = [
-    { name: "Home", href: "#home" },
-    { name: "Services", href: "#services" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
-    { name: "Gallery", href: "#gallery" },
-    { name: "Testimonials", href: "#testimonials" },
+    { name: "Home", href: "home" },
+    { name: "Services", href: "services" },
+    { name: "About", href: "about" },
+    { name: "Contact", href: "contact" },
+    { name: "Gallery", href: "gallery" },
+    { name: "Testimonials", href: "testimonials" },
   ];
 
   const services = [
@@ -61,12 +100,6 @@ export default function Footer() {
     { icon: "💼", name: "LinkedIn", href: "#" },
     { icon: "🐦", name: "Twitter", href: "#" },
   ];
-
-  const handleBookService = () => {
-    document
-      .getElementById("booking-section")
-      ?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <footer className={`${footerBg} transition-colors duration-300`}>
@@ -105,7 +138,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Quick Links */}
+            {/* Quick Links - Updated with smooth scrolling */}
             <div>
               <h4 className={`text-lg font-semibold mb-6 ${titleColor}`}>
                 Quick Links
@@ -113,19 +146,19 @@ export default function Footer() {
               <ul className="space-y-3">
                 {quickLinks.map((link, index) => (
                   <li key={index}>
-                    <Link
-                      href={link.href}
-                      className={`${textColor} ${hoverColor} transition-colors duration-200 flex items-center group`}
+                    <button
+                      onClick={() => handleNavClick(link.href)}
+                      className={`${textColor} ${hoverColor} transition-colors duration-200 flex items-center group w-full text-left`}
                     >
                       <span className="w-2 h-2 bg-pink-600 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></span>
                       {link.name}
-                    </Link>
+                    </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Services */}
+            {/* Services - Updated with smooth scrolling */}
             <div>
               <h4 className={`text-lg font-semibold mb-6 ${titleColor}`}>
                 Our Services
@@ -165,7 +198,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Featured Services Banner */}
+      {/* Featured Services Banner - Updated buttons */}
       <div className="bg-gradient-to-r from-pink-600 to-pink-500 py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center justify-between">
@@ -182,7 +215,10 @@ export default function Footer() {
               >
                 Book Now
               </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-6 py-2 rounded-full font-semibold transition-all duration-300">
+              <button
+                onClick={handleCallNow}
+                className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-6 py-2 rounded-full font-semibold transition-all duration-300"
+              >
                 Call: +91 9315673184
               </button>
             </div>
@@ -245,17 +281,15 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Floating WhatsApp Button */}
+      {/* Floating Call Button (replaced WhatsApp) */}
       <div className="fixed bottom-6 right-6 z-50">
-        <a
-          href="https://wa.me/9315673184"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={handleCallNow}
           className="w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center text-white text-2xl shadow-lg transition-all duration-300 transform hover:scale-110 animate-bounce"
-          title="Chat on WhatsApp"
+          title="Call Now"
         >
-          💬
-        </a>
+          📞
+        </button>
       </div>
     </footer>
   );

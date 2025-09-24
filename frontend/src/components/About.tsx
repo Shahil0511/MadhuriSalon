@@ -2,7 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 
-export default function About() {
+interface AboutProps {
+  onBookService?: (serviceName: string) => void;
+}
+
+export default function About({ onBookService }: AboutProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -59,9 +63,18 @@ export default function About() {
   }, [isVideoLoaded]);
 
   const handleBookService = () => {
-    document
-      .getElementById("booking-section")
-      ?.scrollIntoView({ behavior: "smooth" });
+    if (onBookService) {
+      onBookService("General Appointment");
+    } else {
+      // Fallback: scroll to booking section if no callback provided
+      document
+        .getElementById("booking-section")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handleCallNow = () => {
+    window.open("tel:9315673184", "_self");
   };
 
   const handleVideoLoadedData = () => {
@@ -315,7 +328,10 @@ export default function About() {
                 >
                   💖 Book Appointment
                 </button>
-                <button className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105">
+                <button
+                  onClick={handleCallNow}
+                  className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-8 py-3 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
+                >
                   📞 Call Now
                 </button>
               </div>

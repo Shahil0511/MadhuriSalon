@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -6,13 +9,39 @@ import Hero from "@/components/Hero";
 import Service from "@/components/Service";
 
 export default function Home() {
+  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [selectedService, setSelectedService] = useState("");
+
+  const handleBookService = (serviceName: string) => {
+    setSelectedService(serviceName);
+    setShowBookingForm(true);
+  };
+
+  const handleCloseForm = () => {
+    setShowBookingForm(false);
+    setSelectedService("");
+  };
+
   return (
     <div>
       <Header />
-      <Hero />
-      <Service />
-      <About />
-      <Contact />
+      <section id="home">
+        <Hero
+          showBookingForm={showBookingForm}
+          selectedService={selectedService}
+          onCloseForm={handleCloseForm}
+          onBookService={handleBookService}
+        />
+      </section>
+      <section id="services">
+        <Service onBookService={handleBookService} />
+      </section>
+      <section id="about">
+        <About onBookService={handleBookService} />
+      </section>
+      <section id="contact">
+        <Contact onBookService={handleBookService} />
+      </section>
       <Footer />
     </div>
   );

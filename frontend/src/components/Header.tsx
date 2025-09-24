@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 
 interface HeaderProps {
   initialTheme?: "light" | "dark";
@@ -25,14 +24,6 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Apply theme on change
-  useEffect(() => {
-    if (isMounted) {
-      document.documentElement.classList.toggle("dark", theme === "dark");
-      localStorage.setItem("theme", theme);
-    }
-  }, [theme, isMounted]);
-
   // Initialize theme from localStorage or system preference
   useEffect(() => {
     if (isMounted) {
@@ -54,14 +45,58 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
   const closeMenu = () => setIsMenuOpen(false);
 
+  // Smooth scroll function
+  const scrollToSection = (sectionId: string) => {
+    closeMenu(); // Close mobile menu when clicking a link
+
+    if (sectionId === "home") {
+      // Scroll to top for home
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      return;
+    }
+
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80; // Adjust based on your header height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Navigation items for single page sections
   const navigationItems = [
-    { href: "/", label: "Home" },
-    // { href: "/about", label: "About" },
-    { href: "/services", label: "Services" },
-    { href: "/portfolio", label: "Portfolio" },
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
+    { id: "home", label: "Home" },
+    { id: "services", label: "Services" },
+    { id: "about", label: "About" },
+    { id: "contact", label: "Contact" },
+    { id: "portfolio", label: "Portfolio", href: "/portfolio" }, // External page link
   ];
+
+  // Handle navigation click
+  const handleNavClick = (item: { id: string; href?: string }) => {
+    if (item.href) {
+      // External page link - use regular navigation
+      window.location.href = item.href;
+    } else {
+      // Internal section link - smooth scroll
+      scrollToSection(item.id);
+    }
+  };
+
+  // Book Now button handler
+  const handleBookNow = () => {
+    // Scroll to contact section or trigger booking modal
+    scrollToSection("contact");
+  };
 
   // Prevent hydration mismatch
   if (!isMounted) {
@@ -94,12 +129,11 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
-            {/* Logo - Improved for all screens */}
+            {/* Logo */}
             <div className="flex-shrink-0 z-50">
-              <Link
-                href="/"
+              <button
+                onClick={() => scrollToSection("home")}
                 className="flex items-center space-x-2 group"
-                onClick={closeMenu}
               >
                 <span className="text-2xl sm:text-3xl font-bold text-black dark:text-white transition-transform duration-200 group-hover:scale-105">
                   Madhuri
@@ -107,15 +141,15 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
                     Salon
                   </span>
                 </span>
-              </Link>
+              </button>
             </div>
 
-            {/* Desktop Navigation - Improved spacing and hover effects */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-1 xl:space-x-2">
               {navigationItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item)}
                   className="relative px-4 py-2 text-sm font-medium uppercase tracking-wider 
                            text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white 
                            transition-all duration-200 group"
@@ -125,13 +159,13 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
                     className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-pink-600 dark:bg-pink-400 
                                  transition-all duration-200 group-hover:w-4/5 group-hover:left-[10%]"
                   />
-                </Link>
+                </button>
               ))}
             </nav>
 
-            {/* Right Side Actions - Improved layout for all screens */}
+            {/* Right Side Actions */}
             <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
-              {/* Theme Toggle - Better sizing */}
+              {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
                 className="p-2 sm:p-2.5 rounded-full bg-gray-100 dark:bg-gray-800 
@@ -144,8 +178,9 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
                 </span>
               </button>
 
-              {/* CTA Button - Better responsive sizing */}
+              {/* CTA Button */}
               <button
+                onClick={handleBookNow}
                 className="hidden lg:flex items-center px-4 py-2 sm:px-6 sm:py-2.5 border-2 
                            border-pink-600 dark:border-pink-400 text-sm sm:text-base font-semibold 
                            rounded-full text-pink-600 dark:text-pink-400 
@@ -156,7 +191,7 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
                 Book Now
               </button>
 
-              {/* Mobile Menu Button - Improved animation */}
+              {/* Mobile Menu Button */}
               <button
                 onClick={toggleMenu}
                 className="lg:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 
@@ -194,7 +229,7 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
             </div>
           </div>
 
-          {/* Mobile Navigation - Improved animation and spacing */}
+          {/* Mobile Navigation */}
           <div
             className={`lg:hidden absolute top-full left-0 right-0 bg-white dark:bg-black 
                        shadow-2xl border-t border-gray-200 dark:border-gray-800
@@ -207,11 +242,10 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
           >
             <nav className="px-4 pt-4 pb-6 space-y-2">
               {navigationItems.map((item, index) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMenu}
-                  className="block px-4 py-3 text-base font-semibold text-gray-800 dark:text-gray-200 
+                <button
+                  key={item.id}
+                  onClick={() => handleNavClick(item)}
+                  className="block w-full text-left px-4 py-3 text-base font-semibold text-gray-800 dark:text-gray-200 
                            hover:bg-pink-50 dark:hover:bg-gray-800 hover:text-pink-600 dark:hover:text-pink-400
                            rounded-lg transition-all duration-200 transform hover:translate-x-2
                            border-l-4 border-transparent hover:border-pink-600 dark:hover:border-pink-400"
@@ -220,12 +254,13 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
                   }}
                 >
                   {item.label}
-                </Link>
+                </button>
               ))}
 
-              {/* Mobile CTA Button - Improved styling */}
+              {/* Mobile CTA Button */}
               <div className="px-4 pt-4 border-t border-gray-200 dark:border-gray-800">
                 <button
+                  onClick={handleBookNow}
                   className="w-full flex justify-center items-center px-6 py-3.5 bg-pink-600 dark:bg-pink-400 
                             text-white dark:text-black text-base font-semibold rounded-full
                             hover:bg-pink-700 dark:hover:bg-pink-300 transform hover:scale-105 
@@ -239,7 +274,7 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
         </div>
       </header>
 
-      {/* Add spacing for fixed header with proper sizing */}
+      {/* Add spacing for fixed header */}
       <div className="h-16 lg:h-20" />
     </>
   );

@@ -2,7 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 
-export default function Contact() {
+interface ContactProps {
+  onBookService?: (serviceName: string) => void;
+}
+
+export default function Contact({ onBookService }: ContactProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -56,10 +60,16 @@ export default function Contact() {
     }
   };
 
+  const handleBookService = (serviceName: string) => {
+    if (onBookService) {
+      onBookService(serviceName);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission here
-    alert("Thank you for your message! We&apos;ll get back to you soon.");
+    alert("Thank you for your message! We'll get back to you soon.");
   };
 
   // Color scheme matching your theme
@@ -88,7 +98,7 @@ export default function Contact() {
             Get In <span className="text-pink-600">Touch</span>
           </h2>
           <p className={`text-lg max-w-2xl mx-auto ${textColor}`}>
-            Ready to transform your look? Contact us today and let&apos;s create
+            Ready to transform your look? Contact us today and let's create
             something beautiful together!
           </p>
 
@@ -284,7 +294,6 @@ export default function Contact() {
               className={`rounded-2xl overflow-hidden shadow-lg ${borderColor} border`}
             >
               <div className="relative">
-                {/* Video Placeholder - Replace with your actual video */}
                 <div className="relative h-64 md:h-80 bg-gradient-to-br from-pink-400 to-purple-600 flex items-center justify-center">
                   {isVideoPlaying ? (
                     <video
@@ -358,15 +367,21 @@ export default function Contact() {
             >
               <h3 className="text-2xl font-bold mb-4">🚀 Quick Booking</h3>
               <p className="mb-6 opacity-95">
-                Don&apos;t wait! Book your appointment now and get 10% off on
-                your first service.
+                Don't wait! Book your appointment now and get 10% off on your
+                first service.
               </p>
 
               <div className="space-y-4">
-                <button className="w-full bg-white text-pink-600 hover:bg-gray-100 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                <button
+                  onClick={() => handleBookService("Quick Booking - Call")}
+                  className="w-full bg-white text-pink-600 hover:bg-gray-100 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+                >
                   📞 Call Now to Book
                 </button>
-                <button className="w-full border-2 border-white text-white hover:bg-white hover:text-pink-600 py-3 rounded-lg font-semibold transition-all duration-300">
+                <button
+                  onClick={() => handleBookService("Quick Booking - WhatsApp")}
+                  className="w-full border-2 border-white text-white hover:bg-white hover:text-pink-600 py-3 rounded-lg font-semibold transition-all duration-300"
+                >
                   💬 WhatsApp Instant Booking
                 </button>
               </div>

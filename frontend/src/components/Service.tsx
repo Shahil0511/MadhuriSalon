@@ -3,7 +3,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-export default function Services() {
+interface ServicesProps {
+  onBookService?: (serviceName: string) => void;
+}
+
+export default function Services({ onBookService }: ServicesProps) {
   const [, setActiveCard] = useState<number | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -160,20 +164,25 @@ export default function Services() {
     },
   ];
 
-  const handleBookService = () => {
-    document
-      .getElementById("booking-section")
-      ?.scrollIntoView({ behavior: "smooth" });
+  const handleBookService = (serviceName: string) => {
+    if (onBookService) {
+      onBookService(serviceName);
+    } else {
+      // Fallback: scroll to booking section if no prop provided
+      document
+        .getElementById("booking-section")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   // Black, White, Pink colors only
   const sectionBg = isDarkMode ? "bg-black" : "bg-white";
   const cardBg = isDarkMode ? "bg-black" : "bg-white";
-  const cardShadow = "shadow-lg"; // simple shadow for both themes
+  const cardShadow = "shadow-lg";
   const cardHoverShadow = "shadow-xl";
   const titleColor = isDarkMode ? "text-white" : "text-black";
   const descriptionColor = isDarkMode ? "text-gray-300" : "text-gray-700";
-  const featureBg = "bg-pink-50"; // pink for features
+  const featureBg = "bg-pink-50";
   const featureText = "text-pink-600";
   const priceBg = "bg-pink-600 text-white";
   const ctaGradient = "from-pink-600 to-pink-500";
@@ -244,7 +253,7 @@ export default function Services() {
                 </div>
 
                 <button
-                  onClick={handleBookService}
+                  onClick={() => handleBookService(service.title)}
                   className="w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center gap-2"
                 >
                   Book Now
@@ -280,7 +289,7 @@ export default function Services() {
               for you.
             </p>
             <button
-              onClick={handleBookService}
+              onClick={() => handleBookService("Free Consultation")}
               className="bg-white text-pink-600 hover:bg-gray-100 px-8 py-3 rounded-full font-semibold transition-colors"
             >
               Book Free Consultation

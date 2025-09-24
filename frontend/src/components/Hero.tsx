@@ -1,14 +1,24 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 
-export default function Hero() {
+interface HeroProps {
+  showBookingForm?: boolean;
+  selectedService?: string;
+  onCloseForm?: () => void;
+  onBookService?: (serviceName: string) => void;
+}
+
+export default function Hero({
+  showBookingForm: externalShowForm,
+  selectedService,
+  onCloseForm,
+  onBookService,
+}: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [showImage, setShowImage] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [isContentVisible, setIsContentVisible] = useState(false);
-  const [showBookingForm, setShowBookingForm] = useState(false);
+  const [internalShowBookingForm, setInternalShowBookingForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -16,24 +26,38 @@ export default function Hero() {
     service: "",
   });
 
-  // Video handling
+  // Use external form state if provided, otherwise internal state
+  const showBookingForm =
+    externalShowForm !== undefined ? externalShowForm : internalShowBookingForm;
+
+  // Video handling (same as before)
   useEffect(() => {
     const videoElement = videoRef.current;
 
     const handleVideoError = () => {
-      console.log("Video error - switching to image");
-      setShowImage(true);
+      console.log("Video error - but continuing to try playing");
       setIsVideoLoading(false);
     };
 
     const handleVideoCanPlay = () => {
       console.log("Video can play");
       setIsVideoLoading(false);
+
+      if (videoElement) {
+        videoElement.play().catch((error) => {
+          console.log("Auto-play prevented:", error);
+        });
+      }
     };
 
     const handleVideoEnd = () => {
-      console.log("Video ended - switching to image");
-      setShowImage(true);
+      console.log("Video ended - restarting");
+      if (videoElement) {
+        videoElement.currentTime = 0;
+        videoElement.play().catch((error) => {
+          console.log("Re-play prevented:", error);
+        });
+      }
     };
 
     if (videoElement) {
@@ -55,23 +79,35 @@ export default function Hero() {
       setIsContentVisible(true);
     }, 500);
 
-    // Fallback if video doesn't load
-    const fallbackTimer = setTimeout(() => {
+    const loadingTimeout = setTimeout(() => {
       if (isVideoLoading) {
-        console.log("Video loading timeout - switching to image");
-        setShowImage(true);
+        console.log("Video loading timeout - but continuing with video");
         setIsVideoLoading(false);
       }
     }, 5000);
 
     return () => {
       clearTimeout(contentTimer);
-      clearTimeout(fallbackTimer);
+      clearTimeout(loadingTimeout);
     };
   }, [isVideoLoading]);
 
+  // Pre-fill service when selectedService changes
+  useEffect(() => {
+    if (selectedService) {
+      setFormData((prev) => ({
+        ...prev,
+        service: selectedService,
+      }));
+    }
+  }, [selectedService]);
+
   const handleBookAppointment = () => {
-    setShowBookingForm(true);
+    if (onBookService) {
+      onBookService("General Appointment");
+    } else {
+      setInternalShowBookingForm(true);
+    }
   };
 
   const handleExploreServices = () => {
@@ -94,13 +130,11 @@ export default function Hero() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Format the message for WhatsApp
+    // Format the message for WhatsApp with the selected service
     const message = `New Appointment Booking:%0A%0AName: ${formData.name}%0APhone: ${formData.phone}%0ALocation: ${formData.location}%0AService: ${formData.service}%0A%0AFrom Madhuri Salon Website`;
 
-    // Your WhatsApp number (replace with actual number)
-    const whatsappNumber = "9315673184"; // Example number
+    const whatsappNumber = "9315673184";
 
-    // Open WhatsApp with pre-filled message
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
 
     // Reset form
@@ -111,15 +145,18 @@ export default function Hero() {
       service: "",
     });
 
-    // Close form after submission
-    setShowBookingForm(false);
+    // Close form
+    closeForm();
   };
 
   const closeForm = () => {
-    setShowBookingForm(false);
+    if (onCloseForm) {
+      onCloseForm();
+    } else {
+      setInternalShowBookingForm(false);
+    }
   };
 
-  // Close modal when clicking outside
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeForm();
@@ -232,6 +269,30 @@ export default function Hero() {
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 focus:outline-none focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-colors"
                 >
                   <option value="">Select a Service</option>
+                  <option value="Mini Glow Up">Mini Glow Up</option>
+                  <option value="Classic Clean-Up & Bleach">
+                    Classic Clean-Up & Bleach
+                  </option>
+                  <option value="Facial & Wax Combo">Facial & Wax Combo</option>
+                  <option value="Radiant Fruit Package">
+                    Radiant Fruit Package
+                  </option>
+                  <option value="Luxury Hand & Foot Care">
+                    Luxury Hand & Foot Care
+                  </option>
+                  <option value="Deluxe Beauty Package">
+                    Deluxe Beauty Package
+                  </option>
+                  <option value="Ultimate Relaxation">
+                    Ultimate Relaxation
+                  </option>
+                  <option value="Oxy Therapy Special">
+                    Oxy Therapy Special
+                  </option>
+                  <option value="D-Tan Detox">D-Tan Detox</option>
+                  <option value="Premium Sara Facial & Care">
+                    Premium Sara Facial & Care
+                  </option>
                   <option value="Hair Styling">Hair Styling</option>
                   <option value="Hair Coloring">Hair Coloring</option>
                   <option value="Skin Care">Skin Care</option>
@@ -258,46 +319,28 @@ export default function Hero() {
         </div>
       )}
 
-      {/* Hero Section */}
+      {/* Rest of your Hero component remains the same */}
       <section className="relative w-full h-screen min-h-[550px] max-h-[750px] overflow-hidden">
         {/* Loading Spinner */}
-        {isVideoLoading && !showImage && (
+        {isVideoLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-20 bg-black/20">
             <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
           </div>
         )}
 
         {/* Video Background */}
-        {!showImage && (
-          <video
-            ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            loop={false}
-          >
-            <source src="/hero1.mp4" type="video/mp4" />
-            <source src="/hero.webm" type="video/webm" />
-            Your browser does not support the video tag.
-          </video>
-        )}
-
-        {/* Image Fallback */}
-        {showImage && (
-          <div className="absolute inset-0 w-full h-full">
-            <Image
-              src="/hero-fallback.jpg"
-              alt="Madhuri Salon"
-              fill
-              priority
-              className="object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-          </div>
-        )}
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          playsInline
+          loop={true}
+        >
+          <source src="/hero1.mp4" type="video/mp4" />
+          <source src="/hero.webm" type="video/webm" />
+          Your browser does not support the video tag.
+        </video>
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/50" />
@@ -321,7 +364,6 @@ export default function Hero() {
               Experience premium beauty treatments in a luxurious atmosphere.
             </p>
 
-            {/* Added Official Service Info */}
             <p className="text-base md:text-lg mb-8 opacity-80 max-w-2xl mx-auto">
               ✅ Officially Offering{" "}
               <span className="text-pink-400 font-semibold">Home Service</span>{" "}
