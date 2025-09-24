@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Footer() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [currentYear] = useState(new Date().getFullYear());
 
   // Detect system dark mode preference
   useEffect(() => {

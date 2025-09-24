@@ -163,7 +163,7 @@ export default function Hero() {
                 </button>
               </div>
               <p className="text-gray-600 mt-2">
-                Fill the details and we'll contact you shortly
+                Fill the details and we&apos;ll contact you shortly
               </p>
             </div>
 

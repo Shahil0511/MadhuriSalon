@@ -59,7 +59,7 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission here
-    alert("Thank you for your message! We'll get back to you soon.");
+    alert("Thank you for your message! We&apos;ll get back to you soon.");
   };
 
   // Color scheme matching your theme
@@ -88,9 +88,10 @@ export default function Contact() {
             Get In <span className="text-pink-600">Touch</span>
           </h2>
           <p className={`text-lg max-w-2xl mx-auto ${textColor}`}>
-            Ready to transform your look? Contact us today and let's create
+            Ready to transform your look? Contact us today and let&apos;s create
             something beautiful together!
           </p>
+
           <div className="w-24 h-1 bg-pink-600 mx-auto mb-6"></div>
         </div>
 
@@ -357,8 +358,8 @@ export default function Contact() {
             >
               <h3 className="text-2xl font-bold mb-4">🚀 Quick Booking</h3>
               <p className="mb-6 opacity-95">
-                Don't wait! Book your appointment now and get 10% off on your
-                first service.
+                Don&apos;t wait! Book your appointment now and get 10% off on
+                your first service.
               </p>
 
               <div className="space-y-4">

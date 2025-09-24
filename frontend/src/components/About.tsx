@@ -129,10 +129,11 @@ export default function About() {
               </p>
 
               <p className={`mb-6 ${textColor}`}>
-                At Madhuri Salon, we believe beauty isn't just about looking
-                good—it's about feeling confident, radiant, and unstoppable! ✨
-                Whether it's a special event, a casual pamper day, or a complete
-                makeover, we are here to bring out your best self.
+                At Madhuri Salon, we believe beauty isn&apos;t just about
+                looking good—it&apos;s about feeling confident, radiant, and
+                unstoppable! ✨ Whether it&apos;s a special event, a casual
+                pamper day, or a complete makeover, we are here to bring out
+                your best self.
               </p>
 
               <p className={`${textColor}`}>
@@ -303,8 +304,8 @@ export default function About() {
               <p className="mb-6 opacity-95">
                 Whether you visit us or book a home service, we promise a
                 luxurious, relaxing, and unforgettable beauty experience. At
-                Madhuri Salon, beauty is not just a service—it's a feeling, an
-                experience, and a transformation!
+                Madhuri Salon, beauty is not just a service—it&apos;s a feeling,
+                an experience, and a transformation!
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -320,8 +321,8 @@ export default function About() {
               </div>
 
               <p className="mt-6 text-pink-200 font-semibold">
-                Your comfort, your beauty, our expertise. That's the Madhuri
-                promise!
+                Your comfort, your beauty, our expertise. That&apos;s the
+                Madhuri promise!
               </p>
             </div>
           </div>
