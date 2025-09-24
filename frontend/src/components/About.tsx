@@ -68,7 +68,7 @@ export default function About() {
     setIsVideoLoaded(true);
     // Try to autoplay when video data is loaded
     if (videoRef.current && isVisible) {
-      videoRef.current.play().catch((error) => {
+      videoRef.current.play().catch(() => {
         console.log("Autoplay blocked by browser");
       });
     }
