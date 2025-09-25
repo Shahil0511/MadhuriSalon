@@ -245,7 +245,7 @@ export default function Contact({ onBookService }: ContactProps) {
                   {
                     icon: "🏠",
                     title: "Salon Address",
-                    content: "123 Beauty Street, Glamour City, GC 12345",
+                    content: "Gaur City 1, AIG Park Avenue",
                     sub: "Visit our luxurious salon space",
                   },
                   {
