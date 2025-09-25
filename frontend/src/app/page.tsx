@@ -41,7 +41,7 @@ export default function Home() {
         <section id="about">
           <About onBookService={handleBookService} />
         </section>
-        <section id="portpholio">
+        <section id="portfolio">
           <Portpholio />
         </section>
         <section id="contact">
