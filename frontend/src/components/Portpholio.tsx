@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const Portpholio = () => {
   const [isContentVisible, setIsContentVisible] = useState(false);
@@ -30,9 +31,11 @@ const Portpholio = () => {
             >
               <div className="relative group">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-pink-400/30">
-                  <img
+                  <Image
                     src="/MamMom.jpeg"
                     alt="Beauty Stylist"
+                    width={400}
+                    height={500}
                     className="w-full h-80 object-cover transform group-hover:scale-110 transition duration-700"
                     onError={(e) => {
                       e.currentTarget.src =
@@ -63,13 +66,13 @@ const Portpholio = () => {
                 </h1>
 
                 <blockquote className="text-2xl lg:text-3xl text-pink-200/90 italic leading-relaxed mb-8">
-                  "Glow anywhere with Madhuri Salon – Expert hair, skin, and
-                  nail care at our salon or delivered to your doorstep.
+                  &quot;Glow anywhere with Madhuri Salon – Expert hair, skin,
+                  and nail care at our salon or delivered to your doorstep.
                   <span className="text-pink-400 font-semibold">
                     {" "}
                     Your glamour, my passion.
                   </span>
-                  "
+                  &quot;
                 </blockquote>
 
                 {/* Stats */}
