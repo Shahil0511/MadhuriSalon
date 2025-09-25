@@ -88,7 +88,7 @@ export default function Footer() {
   ];
 
   const contactInfo = [
-    { icon: "🏠", text: "123 Beauty Street, Gaur City, GC 12345" },
+    { icon: "🏠", text: "Gaur City 1, AIG Park Avenue" },
     { icon: "📱", text: "+91 9315673184" },
     { icon: "✉️", text: "hello@madhurisalon.com" },
     { icon: "🕒", text: "Mon-Sun: 9:00 AM - 9:00 PM" },
