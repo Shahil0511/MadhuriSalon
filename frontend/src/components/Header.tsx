@@ -78,7 +78,7 @@ const Header: React.FC<HeaderProps> = ({ initialTheme = "light" }) => {
     { id: "services", label: "Services" },
     { id: "about", label: "About" },
     { id: "contact", label: "Contact" },
-    { id: "portfolio", label: "Portfolio", href: "/portfolio" }, // External page link
+    { id: "portfolio", label: "Portfolio" }, // External page link
   ];
 
   // Handle navigation click
